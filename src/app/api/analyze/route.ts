@@ -6,16 +6,17 @@ export async function POST(req: Request) {
   const { description } = await req.json();
 
   const prompt = `
-Dada esta descrição de uma tarefa:
+Given the following task's description:
 "${description}"
 
-Responde apenas com um JSON neste formato (sem explicações, sem texto antes ou depois):
+Respond only with a JSON with this format (no explanations, no text before or after):
 {
-  "title": "Título curto",
-  "duration": "Tempo estimado (ex: 30 minutos ou 1 hora)",
+  "title": "Short title",
+  "duration": "Estimated duration for the task. (examples: 30 minutes, 3 minutes, 1 hour)",
   "tags": ["tag1", "tag2", "tag3"]
 }
-Por favor, não uses blocos de código na resposta, apenas o JSON puro.  
+Please respond only in English, without translating the input.
+Please, do not use code blocks in the answer, only pure JSON. 
 `;
 
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -42,8 +43,8 @@ Por favor, não uses blocos de código na resposta, apenas o JSON puro.
 
     // Se algum campo estiver em falta, podes fazer fallback:
     return NextResponse.json({
-      title: json.title || 'Sem título',
-      duration: json.duration || 'Sem estimativa',
+      title: json.title || 'No title',
+      duration: json.duration || 'No estimate',
       tags: json.tags || [],
     });
   } catch (err) {
